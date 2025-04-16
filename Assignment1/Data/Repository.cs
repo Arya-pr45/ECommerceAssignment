@@ -1,6 +1,6 @@
-﻿using Assignment1.Models;
+﻿using ECommerce.Models;
 
-namespace Assignment1.Data
+namespace ECommerce.Data
 {
     public class Repository<T> : IRepository<T>
     {
@@ -9,6 +9,7 @@ namespace Assignment1.Data
         public void Add(T entity)
         {
             _entities.Add(entity);
+
         }
 
         public void Remove(int id)

@@ -1,10 +1,11 @@
 ﻿using System;
+using ECommerce.Models;
 
-namespace Assignment1.Models
+namespace Ecommerce.Models
 {
     public class Customer: User
     {
-        public Customer(int userId,string userName): base(userId,userName, "Customer") { }
+        public Customer(int userId,string userName,string password): base(userId,userName,password, "Customer") { }
 
         public override void DisplayUserInfo()
         {

@@ -1,61 +1,68 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Assignment1.Models;
-using Assignment1.Data;
-using Assignment1.Services.Interfaces;
-using Assignment1.Data;
-using Assignment1.Models;
+using ECommerce.Models;
+using ECommerce.Data;
+using ECommerce.Services.Interfaces;
+using ECommerce.Data;
+using ECommerce.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace Assignment1.Controllers
+namespace ECommerce.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IRepository<Product> _productRepository;
+        private readonly ApplicationDbContext _context;
 
-        public ProductController(IRepository<Product> productRepository)
+        //private readonly IRepository<Product> _productRepository;
+        public ProductController(ApplicationDbContext context)
         {
-            _productRepository = productRepository;
+            _context = context;
+            //_productRepository = productRepository;
         }
 
-        // Index action to display all products or filter by category
         public IActionResult Index(string category)
         {
-            // Retrieve all products from the repository
-            var products = _productRepository.GetAll();
-
-            if (!string.IsNullOrEmpty(category))
-            {
-                products = _productRepository.GetProductsByCategory(category);
-            }
-
+            var products = _context.Products.ToList(); 
             return View(products);
         }
 
-        public IActionResult Add()
+        public IActionResult AddProduct()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Add(Product product)
+        public IActionResult AddProduct(Product product)
         {
             if (ModelState.IsValid)  
             {
-                _productRepository.Add(product);  
+                //_productRepository.Add(product);  
                 return RedirectToAction("Index");  
             }
 
             return View(product);
         }
-
-        public IActionResult Details(int id)
+        [HttpPost]
+        public IActionResult SaveProduct(Product product)
         {
-            var product = _productRepository.Find(id);
-            if (product == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();  
+                _context.Products.Add(product);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
             }
 
-            return View(product);  
+            return View("AddProduct"); 
         }
+        //public IActionResult Details(int id)
+        //{
+        //    //var product = _productRepository.Find(id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();  
+        //    }
+
+        //    return View(product);  
+        //}
     }
 }

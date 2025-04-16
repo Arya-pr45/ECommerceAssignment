@@ -1,13 +1,17 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace Assignment1.Models
+namespace ECommerce.Models
 {
     public interface IProduct
     {
+        [Key]
         int ProductId { get; set; }
         string Name { get; set; }
         decimal Price { get; set; }
         string Category { get; set; }
+        string Description {  get; set; }
+        int Stock { get; set; }
         void DisplayProductInfo();
     }
 
@@ -17,6 +21,8 @@ namespace Assignment1.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Category { get; set; }
+        public string Description { get; set; }
+        public int Stock { get; set; }
 
         public void DisplayProductInfo()
         {

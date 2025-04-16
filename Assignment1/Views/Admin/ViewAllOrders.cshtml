@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ECommerce.Models.Order>
+
+@{
+    ViewData["Title"] = "View All Orders";
+}
+
+<h2 class="my-3">All Orders</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.Customer.UserName</td>
+                    <td>@order.Status</td>
+                    <td>@order.OrderDate.ToShortDateString()</td>
+                    <td>
+                        <a href="@Url.Action("OrderDetails", "Admin", new { orderId = order.OrderId })" class="btn btn-info btn-sm">View</a>
+
+                        <form method="post" action="@Url.Action("ChangeOrderStatus", "Admin")" class="d-inline">
+                            <input type="hidden" name="orderId" value="@order.OrderId" />
+                            <select name="status" class="form-control d-inline w-auto">
+                                <option value="Pending" selected="@(order.Status == OrderStatus.Pending)">Pending</option>
+                                <option value="Shipped" selected="@(order.Status == OrderStatus.Processed)">Shipped</option>
+                                <option value="Delivered" selected="@(order.Status == OrderStatus.Delivered)">Delivered</option>
+                            </select>
+                            <button type="submit" class="btn btn-warning btn-sm ml-1">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">No orders found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

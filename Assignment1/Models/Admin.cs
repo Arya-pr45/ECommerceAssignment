@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Assignment1.Models
+namespace ECommerce.Models
 {
     public class Admin:User
     {
-        public Admin(int userId, string userName):base(userId, userName,"Admin") { }
+        public Admin(int userId, string userName,string password):base(userId, userName,password,"Admin") { }
 
         public override void DisplayUserInfo()
         {

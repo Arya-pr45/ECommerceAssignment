@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assignment1.Models;
-using Assignment1.Services.Interfaces;
+using ECommerce.Models;
+using ECommerce.Services.Interfaces;
 
-namespace ECommerce.Services
+namespace ProductS.Services
 {
     public class ProductService : IProductService
     {
@@ -29,6 +29,18 @@ namespace ECommerce.Services
             var product = GetProductById(id);
             if (product != null)
                 _products.Remove(product);
+        }
+
+        public void UpdateProduct(Product updatedProduct)
+        {
+            var existingProduct = _products.FirstOrDefault(p => p.ProductId == updatedProduct.ProductId);
+            if (existingProduct != null)
+            {
+                existingProduct.Name = updatedProduct.Name;
+                existingProduct.Description = updatedProduct.Description;
+                existingProduct.Price = updatedProduct.Price;
+                existingProduct.Stock = updatedProduct.Stock;
+            }
         }
     }
 }

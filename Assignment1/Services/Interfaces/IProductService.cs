@@ -1,9 +1,13 @@
-﻿using Assignment1.Models;
+﻿using ECommerce.Models;
 
-public interface IProductService
+namespace ECommerce.Services.Interfaces
 {
-    IEnumerable<Product> GetAllProducts();
-    Product GetProductById(int id);
-    void AddProduct(Product product);
-    void RemoveProduct(int id);
+    public interface IProductService
+    {
+        IEnumerable<Product> GetAllProducts();
+        Product GetProductById(int id);
+        void AddProduct(Product product);
+        void RemoveProduct(int id);
+        void UpdateProduct(Product product);
+    }
 }

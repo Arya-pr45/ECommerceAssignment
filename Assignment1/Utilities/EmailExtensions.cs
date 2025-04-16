@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Assignment1.Utilities
+namespace ECommerce.Utilities
 {
     public static class EmailExtensions
     {

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Assignment1.Models.Product>
+﻿@model IEnumerable<ECommerce.Models.Product>
 
 @{
     ViewData["Title"] = "All Products";
@@ -28,4 +28,4 @@
     </tbody>
 </table>
 
-<a class="btn btn-primary" href="/Product/Add">Add New Product</a>
+<a class="btn btn-primary" asp-controller="Product" asp-action="AddProduct">Add New Product</a>

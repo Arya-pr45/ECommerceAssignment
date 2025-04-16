@@ -1,4 +1,4 @@
-﻿namespace Assignment1.Controllers
+﻿namespace ECommerce.Controllers
 {
     public class CustomerController
     {

@@ -1,25 +1,58 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Assignment1.Models;
-using Assignment1.Data;
-using System.Linq;
-using Assignment1.Data;
-using Assignment1.Models;
+﻿using ECommerce.Models;
+using ECommerce.Exceptions;
+using ECommerce.Utilities;
 
-namespace ECommerce.Controllers
+
+namespace ECommerce.Services
 {
-    public class OrderController : Controller
-    {
-        private readonly IRepository<Order> _orderRepository;
+    public delegate void OrderProcessedEventHandler(Order order);
 
-        public OrderController(IRepository<Order> orderRepository)
+    public class OrderService
+    {
+        private readonly List<Product> _inventory = new();
+        private readonly Dictionary<int, Order> _orders = new();
+        public event OrderProcessedEventHandler OrderProcessed;
+
+        public void AddToInventory(Product product)
         {
-            _orderRepository = orderRepository;
+            _inventory.Add(product);
+            Logger.LogInfo($"Product added: {product.Name}");
         }
 
-        public IActionResult Index()
+        public void CreateOrder(Order order)
         {
-            var orders = _orderRepository.GetOrdersSortedByDate();
-            return View(orders);
+            _orders[order.OrderId] = order;
+            Logger.LogInfo($"Order created: {order.OrderId}");
+        }
+
+        public async Task PlaceOrderAsync(int orderId)
+        {
+            if (!_orders.TryGetValue(orderId, out var order))
+            {
+                Logger.LogError($"Order not found: {orderId}");
+                throw new OrderNotFoundException(orderId);
+            }
+
+            await Task.Delay(2000); // Simulate processing
+            order.Status = OrderStatus.Processed;
+            Logger.LogInfo($"Order processed: {orderId}");
+            OnOrderProcessed(order);
+        }
+
+        public async Task<OrderStatus> GetOrderStatusAsync(int orderId)
+        {
+            return await Task.Run(() =>
+            {
+                if (_orders.TryGetValue(orderId, out var order))
+                    return order.Status;
+                return OrderStatus.Canceled;
+            });
+        }
+
+        protected virtual void OnOrderProcessed(Order order)
+        {
+            OrderProcessed?.Invoke(order);
+            Logger.LogInfo($"OrderProcessed event triggered for Order ID: {order.OrderId}");
         }
     }
 }

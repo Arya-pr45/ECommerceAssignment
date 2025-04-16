@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Assignment1.Models;
+using ECommerce.Models;
 
-namespace Assignment1.Data
+namespace ECommerce.Data
 {
     public interface IRepository<T>
     {
@@ -10,6 +10,6 @@ namespace Assignment1.Data
         T Find(int id);
         IEnumerable<T> GetAll();
         IEnumerable<Product> GetProductsByCategory(string category);
-        string? GetOrdersSortedByDate();
+        IEnumerable<Order> GetOrdersSortedByDate();
     }
 }

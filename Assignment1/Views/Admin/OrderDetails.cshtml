@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h2>Order Details for Order ID: @Model.OrderId</h2>
+
+<div>
+    <p><strong>Customer:</strong> @Model.Customer.Name</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+    <p><strong>Order Date:</strong> @Model.OrderDate.ToShortDateString()</p>
+    <p><strong>Shipping Address:</strong> @Model.ShippingAddress</p>
+
+    <h3>Ordered Products</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

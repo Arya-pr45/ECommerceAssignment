@@ -1,4 +1,4 @@
-﻿namespace Assignment1.Utilities
+﻿namespace ECommerce.Utilities
 {
     public class DatabaseConnection
     {

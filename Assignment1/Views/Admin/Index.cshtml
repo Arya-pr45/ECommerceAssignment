@@ -1,5 +1,16 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
 }
+
+<h2>Admin Dashboard</h2>
+
+<div>
+    <h4>Welcome, Admin!</h4>
+    <p>Select an option to manage the system:</p>
+
+    <ul>
+        <li><a href="@Url.Action("ManageInventory")">Manage Inventory</a></li>
+        <li><a href="@Url.Action("ViewAllOrders")">View All Orders</a></li>
+        <li><a href="@Url.Action("ManageUsers")">Manage Users</a></li>
+    </ul>
+</div>

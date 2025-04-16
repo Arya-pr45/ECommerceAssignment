@@ -1,9 +1,20 @@
+using ECommerce.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using ProductS.Services;
+using OrderS.Services;
+using UserS.Services;
+using ECommerce.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddScoped<IProductService, IProductService>();
-// Add services to the container.
+builder.Services.AddScoped<IProductService,ProductService>();
+builder.Services.AddScoped<IOrderService,OrderService>();
+builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 var app = builder.Build();
 

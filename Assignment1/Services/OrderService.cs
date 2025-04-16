@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Assignment1.Models.Enums;
-using Assignment1.Models;
-using Assignment1.Services.Interfaces;
-using Assignment1.Models;
-using Assignment1.Services.Interfaces;
+using ECommerce.Models;
+using ECommerce.Services.Interfaces;
 
-namespace ECommerce.Services
+namespace OrderS.Services
 {
     public class OrderService : IOrderService
     {
@@ -16,8 +13,7 @@ namespace ECommerce.Services
 
         public async Task PlaceOrderAsync(Order order)
         {
-            // Simulate async order processing
-            await Task.Delay(2000); 
+            await Task.Delay(2000);
             order.Status = OrderStatus.Processed;
             order.OrderDate = DateTime.Now;
             _orders.Add(order);
@@ -30,6 +26,29 @@ namespace ECommerce.Services
                 var order = _orders.FirstOrDefault(o => o.OrderId == orderId);
                 return order?.Status ?? OrderStatus.Canceled;
             });
+        }
+
+        // ✅ Interface method implementations below:
+
+        public List<Order> GetAllOrders()
+        {
+            return _orders;
+        }
+
+        public Order GetOrderById(int orderId)
+        {
+            return _orders.FirstOrDefault(o => o.OrderId == orderId);
+        }
+
+        public void UpdateOrder(Order updatedOrder)
+        {
+            var existingOrder = _orders.FirstOrDefault(o => o.OrderId == updatedOrder.OrderId);
+            if (existingOrder != null)
+            {
+                existingOrder.Status = updatedOrder.Status;
+                existingOrder.OrderDate = updatedOrder.OrderDate;
+                existingOrder.CustomerId = updatedOrder.CustomerId;
+            }
         }
     }
 }

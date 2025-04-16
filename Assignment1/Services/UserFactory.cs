@@ -1,16 +1,16 @@
-﻿using Assignment1.Models;
-using Assignment1.Models;
+﻿using Ecommerce.Models;
+using ECommerce.Models;
 
 namespace ECommerce.Services
 {
     public static class UserFactory
     {
-        public static User CreateUser(string role, int id, string username)
+        public static User? CreateUser(string role, int userId, string username,string password)
         {
             return role.ToLower() switch
             {
-                "admin" => new Admin { UserId = id, Username = username, Role = "Admin" },
-                "customer" => new Customer { UserId = id, Username = username, Role = "Customer" },
+                "admin" => new Admin(userId, username,password),
+                "customer" => new Customer(userId, username,password),
                 _ => null
             };
         }
