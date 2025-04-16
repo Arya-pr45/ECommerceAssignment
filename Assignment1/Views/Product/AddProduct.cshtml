@@ -1,0 +1,25 @@
+﻿@model Assignment1.Models.Product
+
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<h2>Add a New Product</h2>
+
+<form asp-action="Add" method="post">
+    <div class="form-group">
+        <label asp-for="ProductId"></label>
+        <input asp-for="ProductId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Add Product</button>
+</form>
+
+<a class="btn btn-secondary mt-2" href="/Product">Back to Products</a>

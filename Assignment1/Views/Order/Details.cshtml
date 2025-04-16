@@ -1,0 +1,31 @@
+﻿@model Assignment1.Models.Order
+
+<h2>Order Details</h2>
+<p>Order ID: @Model.OrderId</p>
+<p>Order Date: @Model.OrderDate</p>
+<p>
+    Status:
+    @switch (Model.Status)
+    {
+        case OrderStatus.Pending:
+            <text>Waiting for confirmation</text>
+            ;
+            break;
+        case OrderStatus.Processed:
+            <text>Order is being processed</text>
+            ;
+            break;
+        case OrderStatus.Shipped:
+            <text>Shipped to your address</text>
+            ;
+            break;
+        case OrderStatus.Delivered:
+            <text>Delivered successfully</text>
+            ;
+            break;
+        case OrderStatus.Canceled:
+            <text>Order was canceled</text>
+            ;
+            break;
+    }
+</p>
