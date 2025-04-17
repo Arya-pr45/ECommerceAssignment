@@ -1,0 +1,17 @@
+﻿@model ECommerce.Models.Cart
+
+<h2>Your Cart</h2>
+
+@if (Model != null && Model.Items.Any())
+{
+    <ul>
+        @foreach (var item in Model.Items)
+        {
+            <li>@item.Product.Name - Quantity: @item.Quantity</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}

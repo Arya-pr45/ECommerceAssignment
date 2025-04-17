@@ -1,18 +1,17 @@
-﻿using Ecommerce.Models;
-using ECommerce.Models;
-
-namespace ECommerce.Services
+﻿namespace ECommerce.Models
 {
     public static class UserFactory
     {
-        public static User? CreateUser(string role, int userId, string username,string password)
+        public static User CreateUser(string role, int userId, string userName, string password,
+                               string email = "", string phoneNumber = "")
         {
-            return role.ToLower() switch
+            return role switch
             {
-                "admin" => new Admin(userId, username,password),
-                "customer" => new Customer(userId, username,password),
-                _ => null
+                //"Admin" => new Admin(userId, userName, password),
+                //"Customer" => new Customer(userId, userName, password, email, phoneNumber),
+                _ => throw new ArgumentException("Invalid user role")
             };
         }
-    }
-}
+    };
+        }
+  

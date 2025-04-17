@@ -10,7 +10,7 @@ namespace ECommerce.Models
         string Name { get; set; }
         decimal Price { get; set; }
         string Category { get; set; }
-        string Description {  get; set; }
+        string Description { get; set; }
         int Stock { get; set; }
         void DisplayProductInfo();
     }
@@ -28,5 +28,9 @@ namespace ECommerce.Models
         {
             Console.WriteLine($"ID: {ProductId}, Name: {Name}, Price: ₹{Price}, Category:{Category}");
         }
+    }
+    public class ProductManage: Product
+    {
+        public char Action { get; set; }
     }
 }

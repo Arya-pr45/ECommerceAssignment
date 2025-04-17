@@ -1,31 +1,59 @@
 ﻿@model IEnumerable<ECommerce.Models.Product>
-
 @{
-    ViewData["Title"] = "All Products";
+	ViewData["Title"] = "All Products";
+	var isAdmin = User.IsInRole("Admin");
 }
 
-<h2>All Products</h2>
+<h2 class="mb-4">All Products</h2>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Price (₹)</th>
-            <th>Category</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.ProductId</td>
-                <td>@product.Name</td>
-                <td>@product.Price</td>
-                <td>@product.Category</td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (isAdmin)
+{
+	<p>
+		<a class="btn btn-success mb-3" asp-controller="Product" asp-action="Manage">Add New Product</a>
+	</p>
+}
 
-<a class="btn btn-primary" asp-controller="Product" asp-action="AddProduct">Add New Product</a>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+	@foreach (var product in Model)
+	{
+		<div class="col">
+			<div class="card h-100 shadow-sm">
+				<div class="card-body">
+					<h5 class="card-title">@product.Name</h5>
+					<h6 class="card-subtitle mb-2 text-muted">Category: @product.Category</h6>
+					<p class="card-text">Price: ₹@product.Price</p>
+				</div>
+				<div class="card-footer d-flex justify-content-between align-items-center">
+					<a asp-action="Details" asp-route-id="@product.ProductId" class="btn btn-info btn-sm">View</a>
+
+					@if (isAdmin)
+					{
+						<div class="d-flex">
+							<form asp-controller="Product" asp-action="Manage" method="post" class="me-1">
+								<input type="hidden" name="Action" value="M" />
+								<input type="hidden" name="ProductId" value="@product.ProductId" />
+								<input type="hidden" name="Name" value="@product.Name" />
+								<input type="hidden" name="Price" value="@product.Price" />
+								<input type="hidden" name="Category" value="@product.Category" />
+								<input type="hidden" name="Description" value="@product.Description" />
+								<input type="hidden" name="Stock" value="@product.Stock" />
+								<button type="submit" class="btn btn-warning btn-sm">Edit</button>
+							</form>
+
+							<form asp-controller="Product" asp-action="SaveProduct" method="post">
+								<input type="hidden" name="Action" value="D" />
+								<input type="hidden" name="ProductId" value="@product.ProductId" />
+								<input type="hidden" name="Name" value="@product.Name" />
+								<input type="hidden" name="Price" value="@product.Price" />
+								<input type="hidden" name="Category" value="@product.Category" />
+								<input type="hidden" name="Description" value="@product.Description" />
+								<input type="hidden" name="Stock" value="@product.Stock" />
+								<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+							</form>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</div>

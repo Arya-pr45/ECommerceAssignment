@@ -1,5 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+    ViewData["Title"] = "Welcome to WebApp!";
 }
+
+<div class="container-fluid p-0">
+    <!-- Hero Section -->
+    <div class="bg-dark text-white text-center py-5" style="background: url('/images/hero-banner.jpg') no-repeat center center / cover; height: 70vh;">
+        <div class="h-100 d-flex flex-column justify-content-center align-items-center bg-dark bg-opacity-50">
+            <h1 class="display-4 fw-bold">
+                <span class="nav-link text-success">Welcome, @User?.Identity?.Name!</span>
+            </h1>
+            <p class="lead mb-4">Your one-stop shop for all your needs.</p>
+            <a href="/Product/Index" class="btn btn-primary btn-lg">Shop Now</a>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <h2 class="text-center mb-5">Featured Categories</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="/images/electronics.jpg" class="card-img-top" alt="Electronics">
+                    <div class="card-body">
+                        <h5 class="card-title">Electronics</h5>
+                        <p class="card-text">Shop the latest gadgets and accessories.</p>
+                        <a href="/Product/Category?name=Electronics" class="btn btn-outline-primary">Browse</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="/images/fashion.jpg" class="card-img-top" alt="Fashion">
+                    <div class="card-body">
+                        <h5 class="card-title">Fashion</h5>
+                        <p class="card-text">Trendy clothes and accessories just for you.</p>
+                        <a href="/Product/Category?name=Fashion" class="btn btn-outline-primary">Browse</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="/images/home-decor.jpg" class="card-img-top" alt="Home Decor">
+                    <div class="card-body">
+                        <h5 class="card-title">Home Decor</h5>
+                        <p class="card-text">Add elegance to your living space.</p>
+                        <a href="/Product/Category?name=HomeDecor" class="btn btn-outline-primary">Browse</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-primary text-white text-center py-4">
+        <h4>Ready to explore thousands of products?</h4>
+        <a href="/Account/Register" class="btn btn-light btn-lg mt-3">Create an Account</a>
+    </div>
+</div>

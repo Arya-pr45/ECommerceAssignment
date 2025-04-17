@@ -114,7 +114,7 @@ namespace ECommerce.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Ecommerce.Models.Customer", b =>
+            modelBuilder.Entity("ECommerce.Models.Customer", b =>
                 {
                     b.HasBaseType("ECommerce.Models.User");
 
@@ -123,7 +123,7 @@ namespace ECommerce.Migrations
 
             modelBuilder.Entity("ECommerce.Models.Order", b =>
                 {
-                    b.HasOne("Ecommerce.Models.Customer", "Customer")
+                    b.HasOne("ECommerce.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)

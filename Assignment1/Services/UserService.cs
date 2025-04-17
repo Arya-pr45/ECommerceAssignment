@@ -1,4 +1,4 @@
-﻿using Ecommerce.Models;
+﻿using ECommerce.Models;
 using ECommerce.Models;
 using ECommerce.Services.Interfaces;
 using System.Collections.Generic;
@@ -18,21 +18,19 @@ namespace UserS.Services
 
         public bool Register(string username, string password, string role)
         {
-            if (_users.Any(u => u.UserName == username))
-                return false;
+        //    if (_users.Any(u => u.UserName == username))
+        //        return false;
 
-            User newUser;
-            int newUserId = _idCounter++;
+            //    int newUserId = _idCounter++;
+            //    //User newUser = role.ToLower() == "admin"
+            //        //? new Admin(newUserId, username, password)
+            //        //: new Customer(newUserId, username, password);
 
-            if (role.ToLower() == "admin")
-                newUser = new Admin(newUserId, username, password);
-            else
-                newUser = new Customer(newUserId, username, password);
+            //    newUser.Role = role;
+            //    _users.Add(newUser);
+                return true;
+            }
 
-            newUser.Role = role;
-            _users.Add(newUser);
-            return true;
-        }
 
         public User GetUserByUsername(string username)
         {
