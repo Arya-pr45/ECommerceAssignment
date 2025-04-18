@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Models
@@ -7,9 +8,9 @@ namespace ECommerce.Models
     public class Cart
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public int userId { get; set; }
 
-        [ForeignKey("CustomerId")]
+        [ForeignKey("userId")]
 
         public bool IsCheckedOut { get; set; } = false;
 
@@ -19,6 +20,5 @@ namespace ECommerce.Models
         [Required]
         public DateTime UpdatedAt { get; set; }
 
-        public ICollection<CartItem> Items { get; set; } = new List<CartItem>();  
     }
 }

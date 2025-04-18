@@ -1,60 +1,64 @@
-﻿
+﻿@model List<ECommerce.Models.Product>
+
 @{
-    ViewData["Title"] = "Welcome to WebApp!";
+	ViewData["Title"] = "Welcome";
 }
 
-<div class="container-fluid p-0">
-    <!-- Hero Section -->
-    <div class="bg-dark text-white text-center py-5" style="background: url('/images/hero-banner.jpg') no-repeat center center / cover; height: 70vh;">
-        <div class="h-100 d-flex flex-column justify-content-center align-items-center bg-dark bg-opacity-50">
-            <h1 class="display-4 fw-bold">
-                <span class="nav-link text-success">Welcome, @User?.Identity?.Name!</span>
-            </h1>
-            <p class="lead mb-4">Your one-stop shop for all your needs.</p>
-            <a href="/Product/Index" class="btn btn-primary btn-lg">Shop Now</a>
-        </div>
-    </div>
+<div class="container">
+	<h1>List of Products Available</h1>
+	<div class="row">
+		@foreach (var item in Model)
+		{
+			<div class="col-sm-4">
+				<span style="display:block" class="h3 text-info">@item.Name</span>
+				<span style="display:block" class="h4 text-info"><b>@item.Price per item</b></span>
+				<a href="@Url.Action("AddToCart","Cart",new{@ProductId = item.ProductId})" class="btn btn-primary">Add to Cart</a>
+			</div>
+		}
 
-    <div class="container py-5">
-        <h2 class="text-center mb-5">Featured Categories</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="/images/electronics.jpg" class="card-img-top" alt="Electronics">
-                    <div class="card-body">
-                        <h5 class="card-title">Electronics</h5>
-                        <p class="card-text">Shop the latest gadgets and accessories.</p>
-                        <a href="/Product/Category?name=Electronics" class="btn btn-outline-primary">Browse</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="/images/fashion.jpg" class="card-img-top" alt="Fashion">
-                    <div class="card-body">
-                        <h5 class="card-title">Fashion</h5>
-                        <p class="card-text">Trendy clothes and accessories just for you.</p>
-                        <a href="/Product/Category?name=Fashion" class="btn btn-outline-primary">Browse</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="/images/home-decor.jpg" class="card-img-top" alt="Home Decor">
-                    <div class="card-body">
-                        <h5 class="card-title">Home Decor</h5>
-                        <p class="card-text">Add elegance to your living space.</p>
-                        <a href="/Product/Category?name=HomeDecor" class="btn btn-outline-primary">Browse</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-primary text-white text-center py-4">
-        <h4>Ready to explore thousands of products?</h4>
-        <a href="/Account/Register" class="btn btn-light btn-lg mt-3">Create an Account</a>
-    </div>
+	</div>
 </div>
+
+<style>
+	body.dark-mode {
+		background-color: #121212;
+		color: #e0e0e0;
+	}
+
+	.dark-mode .card {
+		background-color: #1e1e1e;
+		color: #fff;
+		border: 1px solid #333;
+	}
+
+	.dark-mode .btn-outline-dark {
+		color: #fff;
+		border-color: #fff;
+	}
+</style>
+
+<div class="container text-center mt-5">
+
+	<div class="text-end mb-3">
+		<button class="btn btn-sm btn-outline-dark" id="toggleDarkMode">
+			🌙 Toggle Dark Mode
+		</button>
+	</div>
+
+	<div class="card shadow p-4">
+		<h1 class="display-4 mb-4">Welcome to Our E-Commerce Portal</h1>
+		<p class="lead">Shop, manage orders, and experience seamless service powered by AI-enhanced backend.</p>
+
+		<div class="mt-5 d-flex justify-content-center gap-3">
+			<a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg">Login</a>
+			<a asp-controller="Auth" asp-action="Register" class="btn btn-outline-primary btn-lg">Register</a>
+		</div>
+	</div>
+</div>
+
+<script>
+	const toggleBtn = document.getElementById("toggleDarkMode");
+	toggleBtn.addEventListener("click", function () {
+		document.body.classList.toggle("dark-mode");
+	});
+</script>

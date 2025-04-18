@@ -53,6 +53,7 @@ namespace ECommerce.Controllers
                         existingProduct.Category = req.Category;
                         existingProduct.Description = req.Description;
                         existingProduct.Stock = req.Stock;
+
                     }
                 }
                 else if (req.Action == 'D')

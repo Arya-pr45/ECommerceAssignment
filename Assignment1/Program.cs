@@ -2,22 +2,21 @@ using ECommerce.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ProductS.Services;
 using UserS.Services;
-using CartS.Services;
 using ECommerce.Data;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<CartS.Services.ICartService, CartService>();
 
 
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews();
+
 builder.Services.AddSession();
 
-// Register the database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
@@ -32,6 +31,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 

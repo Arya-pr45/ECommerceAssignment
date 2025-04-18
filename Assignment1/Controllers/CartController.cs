@@ -1,28 +1,69 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ECommerce.Services;
 using ECommerce.Models;
-using CartS.Services;
+using Newtonsoft.Json;
+using ECommerce.Data;
 
 namespace ECommerce.Controllers
 {
     public class CartController : Controller
     {
-        private readonly ICartService _cartService;
+        private readonly ApplicationDbContext _context;
 
-        public CartController(ICartService cartService)
+        public CartController(ApplicationDbContext context)
         {
-            _cartService = cartService;
+            _context = context;
         }
-        public async Task<IActionResult> Index(int customerId)
-        {
-            var cart = await _cartService.GetCartAsync(customerId);
 
-            if (cart == null)
+        public IActionResult Index()
+        {
+            var cart = GetCartFromSession();
+            return View(cart);
+        }
+
+        public IActionResult AddToCart(int productId)
+        {
+            var product = _context.Products.Find(productId);
+            if (product == null) return NotFound();
+
+            var cart = GetCartFromSession();
+
+            var existingItem = cart.FirstOrDefault(x => x.Product.ProductId == productId);
+            if (existingItem != null)
             {
-                return NotFound("Cart not found for this customer.");
+                existingItem.Quantity++;
+            }
+            else
+            {
+                cart.Add(new CartItem { Product = product, Quantity = 1 });
             }
 
-            return View(cart);
+            SaveCartToSession(cart);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult RemoveFromCart(int ProductId)
+        {
+            var cart = GetCartFromSession();
+            var item = cart.FirstOrDefault(x => x.Product.ProductId == ProductId);
+            if (item != null)
+            {
+                cart.Remove(item);
+                SaveCartToSession(cart);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        private List<CartItem> GetCartFromSession()
+        {
+            var cartJson = HttpContext.Session.GetString("Cart");
+            return cartJson != null ? JsonConvert.DeserializeObject<List<CartItem>>(cartJson) : new List<CartItem>();
+        }
+
+        private void SaveCartToSession(List<CartItem> cart)
+        {
+            var cartJson = JsonConvert.SerializeObject(cart);
+            HttpContext.Session.SetString("Cart", cartJson);
         }
     }
 }

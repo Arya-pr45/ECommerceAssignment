@@ -1,17 +1,44 @@
-﻿@model ECommerce.Models.Cart
+﻿@model List<ECommerce.Models.CartItem>
 
 <h2>Your Cart</h2>
 
-@if (Model != null && Model.Items.Any())
+@if (!Model.Any())
 {
-    <ul>
-        @foreach (var item in Model.Items)
-        {
-            <li>@item.Product.Name - Quantity: @item.Quantity</li>
-        }
-    </ul>
+    <p>Your cart is empty.</p>
 }
 else
 {
-    <p>Your cart is empty.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>₹@item.Product.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>₹@(item.Quantity * item.Product.Price)</td>
+                    <td>
+                        <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-productId="@item.Product.ProductId" class="btn btn-danger">
+                            Remove
+                        </a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3" class="text-end"><strong>Total Amount to be Paid:</strong></td>
+                <td colspan="2">
+                    <strong>₹@Model.Sum(item => item.Product.Price * item.Quantity)</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 }
