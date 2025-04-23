@@ -1,24 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ECommerce.Models;
-using ECommerce.Data;
+using ECommerce.Models.Products;
 using Microsoft.AspNetCore.Authorization;
+using ECommerce.Repository;
 
 namespace ECommerce.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Product> _productRepository;
 
-        //private readonly IRepository<Product> _productRepository;
-        public ProductController(ApplicationDbContext context)
+        public ProductController(IRepository<Product> productRepository)
         {
-            _context = context;
-            //_productRepository = productRepository;
+            _productRepository = productRepository;
         }
-
-        public IActionResult Index(string category)
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(string category)
         {
-            var products = _context.Products.ToList();
+            var products = string.IsNullOrEmpty(category)
+                ? await _productRepository.GetAllAsync()
+                : await _productRepository.FindAsync(p => p.Category == category);
+
             return View(products);
         }
 
@@ -34,92 +35,101 @@ namespace ECommerce.Controllers
             product.Action = 'M';
             return View(product);
         }
+
         [HttpPost]
-        public IActionResult SaveProduct(ProductManage req)
+        public async Task<IActionResult> SaveProduct(ProductManage req)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View("Manage");
+
+            if (req.Action == 'A')
             {
-                if (req.Action == 'A')
+                var newProduct = new Product
                 {
-                    _context.Products.Add(req);
-                }
-                else if (req.Action == 'M')
-                {
-                    var existingProduct = _context.Products.Find(req.ProductId);
-                    if (existingProduct != null)
-                    {
-                        existingProduct.Name = req.Name;
-                        existingProduct.Price = req.Price;
-                        existingProduct.Category = req.Category;
-                        existingProduct.Description = req.Description;
-                        existingProduct.Stock = req.Stock;
+                    Name = req.Name,
+                    Price = req.Price,
+                    Category = req.Category,
+                    Description = req.Description,
+                    Stock = req.Stock
+                };
 
-                    }
-                }
-                else if (req.Action == 'D')
+                await _productRepository.AddAsync(newProduct);
+            }
+            else if (req.Action == 'M')
+            {
+                var existingProduct = await _productRepository.GetByIdAsync(req.ProductId);
+                if (existingProduct != null)
                 {
-                    var product = _context.Products.Find(req.ProductId);
-                    if (product != null)
-                    {
-                        _context.Products.Remove(product);
-                    }
-                }
+                    existingProduct.Name = req.Name;
+                    existingProduct.Price = req.Price;
+                    existingProduct.Category = req.Category;
+                    existingProduct.Description = req.Description;
+                    existingProduct.Stock = req.Stock;
 
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                    _productRepository.Update(existingProduct);
+                }
+            }
+            else if (req.Action == 'D')
+            {
+                var product = await _productRepository.GetByIdAsync(req.ProductId);
+                if (product != null)
+                {
+                    _productRepository.Remove(product);
+                }
             }
 
-            return View("Manage");
+            await _productRepository.SaveAsync();
+            return RedirectToAction("Index");
         }
-
 
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _productRepository.GetByIdAsync(id);
             if (product == null) return NotFound();
             return View(product);
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _productRepository.GetByIdAsync(id);
             if (product == null) return NotFound();
             return View(product);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(Product product)
+        public async Task<IActionResult> Edit(Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Update(product);
-                _context.SaveChanges();
+                _productRepository.Update(product);
+                await _productRepository.SaveAsync();
                 return RedirectToAction("Index");
             }
             return View(product);
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _productRepository.GetByIdAsync(id);
             if (product == null) return NotFound();
             return View(product);
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _productRepository.GetByIdAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
+                _productRepository.Remove(product);
+                await _productRepository.SaveAsync();
             }
+            TempData["success"] = "Product deleted successfully";
             return RedirectToAction("Index");
         }
     }

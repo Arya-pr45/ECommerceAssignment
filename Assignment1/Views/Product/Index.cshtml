@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ECommerce.Models.Product>
+﻿@using ECommerce.Models.Products
+@model IEnumerable<Product>
+
 @{
 	ViewData["Title"] = "All Products";
 	var isAdmin = User.IsInRole("Admin");
@@ -8,9 +10,12 @@
 
 @if (isAdmin)
 {
-	<p>
-		<a class="btn btn-success mb-3" asp-controller="Product" asp-action="Manage">Add New Product</a>
-	</p>
+	<div class="d-flex justify-content-end mb-3">
+		<a class="btn btn-success" asp-controller="Product" asp-action="Manage">
+			<i class="bi bi-plus-circle-fill"></i> Add New Product
+		</a>
+	</div>
+
 }
 
 <div class="row row-cols-1 row-cols-md-3 g-4">

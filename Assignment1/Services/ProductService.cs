@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ECommerce.Models;
-using ECommerce.Services.Interfaces;
+using ECommerce.Interfaces;
+using ECommerce.Models.Products;
 
 namespace ProductS.Services
 {

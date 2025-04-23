@@ -1,16 +1,63 @@
-﻿@model ECommerce.Models.Product
+﻿@using ECommerce.Models.Products
+@model Product
 
 @{
     ViewData["Title"] = "Product Details";
 }
 
-<h2>Product Details</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-<div class="card p-3">
-    <h4>@Model.Name</h4>
-    <p><strong>Price:</strong> ₹@Model.Price</p>
-    <p><strong>Category:</strong> @Model.Category</p>
-    <p><strong>Description:</strong> @Model.Description</p>
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">@Model.Name</h2>
+                </div>
 
-    <a asp-action="Index" class="btn btn-secondary">Back to Products</a>
+                <div class="card-body">
+                    <p class="fs-5"><strong>Price:</strong> ₹@Model.Price</p>
+                    <p class="fs-5"><strong>Category:</strong> @Model.Category</p>
+                    <p class="fs-5"><strong>Description:</strong></p>
+                    <p class="text-muted">@Model.Description</p>
+                </div>
+
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">← Back to Products</a>
+                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-ProductId="@Model.ProductId" class="btn btn-success">Add to Cart 🛒</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+    body.dark-mode .card {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+    }
+
+    body.dark-mode .card-header {
+        background-color: #333;
+        border-bottom: 1px solid #444;
+    }
+
+    body.dark-mode .btn-outline-secondary {
+        color: #ccc;
+        border-color: #ccc;
+    }
+
+        body.dark-mode .btn-outline-secondary:hover {
+            background-color: #ccc;
+            color: #000;
+        }
+</style>

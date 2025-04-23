@@ -1,6 +1,6 @@
 ﻿using ECommerce.Models;
 using ECommerce.Models;
-using ECommerce.Services.Interfaces;
+using ECommerce.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 

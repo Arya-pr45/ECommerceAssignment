@@ -1,0 +1,27 @@
+﻿@using ECommerce.Models.Products
+@model List<Product>
+@{
+	ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-5">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h2>Welcome, @User.Identity.Name 👋</h2>
+	</div>
+
+	<div class="row">
+		@foreach (var item in Model)
+		{
+			<div class="col-md-4 mb-4">
+				<div class="card shadow h-100">
+					@* <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height:200px; object-fit:cover;" > *@
+					<div class="card-body">
+						<h5 class="card-title text-primary">@item.Name</h5>
+						<p class="card-text"><strong>₹@item.Price</strong> per item</p>
+						<a href="@Url.Action("AddToCart","Cart", new { ProductId = item.ProductId })" class="btn btn-sm btn-primary">Add to Cart</a>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>

@@ -1,7 +1,7 @@
 ﻿// Services/Interfaces/IUserService.cs
 using ECommerce.Models;
 
-namespace ECommerce.Services.Interfaces
+namespace ECommerce.Interfaces
 {
     public interface IUserService
     {

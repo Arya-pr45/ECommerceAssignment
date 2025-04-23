@@ -12,6 +12,7 @@ namespace ECommerce.Models
         public string Password { get; set; }
         public string Email { get; set; }
         public UserRole Role { get; set; }
+        //public string IsInRole { get; internal set; }
 
         public User() { }
 

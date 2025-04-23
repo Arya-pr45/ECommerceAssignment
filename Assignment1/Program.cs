@@ -1,15 +1,18 @@
-using ECommerce.Services.Interfaces;
+using ECommerce.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ProductS.Services;
 using UserS.Services;
 using ECommerce.Data;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ECommerce.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
 
 builder.Services
@@ -26,8 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.LoginPath = "/Auth/Login";
     });
 
 builder.Services.AddAuthorization();

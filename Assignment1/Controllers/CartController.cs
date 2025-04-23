@@ -1,69 +1,92 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ECommerce.Models;
-using Newtonsoft.Json;
-using ECommerce.Data;
+using ECommerce.Repository;
+using ECommerce.Models.Carts;
+using ECommerce.Models.Products;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace ECommerce.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Cart> _cartItemRepo;
+        private readonly IRepository<Product> _productRepo;
 
-        public CartController(ApplicationDbContext context)
+        public CartController(IRepository<Cart> cartItemRepo, IRepository<Product> productRepo)
         {
-            _context = context;
+            _cartItemRepo = cartItemRepo;
+            _productRepo = productRepo;
+        }
+        public async Task<IActionResult> Index()
+        {
+            CartViewModel cartViewModel = new CartViewModel();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            IEnumerable<Cart> cartItems = await _cartItemRepo.FindAsync(c => c.UserId == userId);
+            List<CartItem> cartItemList = new();
+            foreach (var cartItem in cartItems)
+            {
+                var product = await _productRepo.GetByIdAsync(cartItem.ProductId);
+                CartItem cartItemObj = new()
+                {
+                    ProductName = product.Name,
+                    Price = product.Price,
+                    Quantity = cartItem.Quantity,
+                    ProductId = cartItem.ProductId
+                };
+                cartItemList.Add(cartItemObj);
+            }
+            cartViewModel.cartList = cartItemList;
+            return View(cartViewModel);
         }
 
-        public IActionResult Index()
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> AddToCart(int productId)
         {
-            var cart = GetCartFromSession();
-            return View(cart);
-        }
-
-        public IActionResult AddToCart(int productId)
-        {
-            var product = _context.Products.Find(productId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var product = _productRepo.Find(productId);
             if (product == null) return NotFound();
 
-            var cart = GetCartFromSession();
+            var existingCartItem = (await _cartItemRepo.FindAsync(c =>
+                c.ProductId == productId && c.UserId == userId)).FirstOrDefault();
 
-            var existingItem = cart.FirstOrDefault(x => x.Product.ProductId == productId);
-            if (existingItem != null)
+            if (existingCartItem != null)
             {
-                existingItem.Quantity++;
+                existingCartItem.Quantity++;
+                _cartItemRepo.Update(existingCartItem);
             }
             else
             {
-                cart.Add(new CartItem { Product = product, Quantity = 1 });
+                var cartItem = new Cart
+                {
+                    UserId = userId,
+                    ProductId = productId,
+                    Quantity = 1,
+                    Product = product
+                };
+                await _cartItemRepo.AddAsync(cartItem);
             }
 
-            SaveCartToSession(cart);
+            await _cartItemRepo.SaveAsync();
+            TempData["success"] = "Added to Cart Successfully";
             return RedirectToAction("Index");
         }
 
-        public IActionResult RemoveFromCart(int ProductId)
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> RemoveFromCart(int productId)
         {
-            var cart = GetCartFromSession();
-            var item = cart.FirstOrDefault(x => x.Product.ProductId == ProductId);
-            if (item != null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cartItem = (await _cartItemRepo.FindAsync(c =>
+                c.ProductId == productId && c.UserId == userId)).FirstOrDefault();
+
+            if (cartItem != null)
             {
-                cart.Remove(item);
-                SaveCartToSession(cart);
+                _cartItemRepo.Remove(cartItem);
+                await _cartItemRepo.SaveAsync();
             }
-
+            TempData["success"] = "Removed From Cart";
             return RedirectToAction("Index");
-        }
-
-        private List<CartItem> GetCartFromSession()
-        {
-            var cartJson = HttpContext.Session.GetString("Cart");
-            return cartJson != null ? JsonConvert.DeserializeObject<List<CartItem>>(cartJson) : new List<CartItem>();
-        }
-
-        private void SaveCartToSession(List<CartItem> cart)
-        {
-            var cartJson = JsonConvert.SerializeObject(cart);
-            HttpContext.Session.SetString("Cart", cartJson);
         }
     }
 }

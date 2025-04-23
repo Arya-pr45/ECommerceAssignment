@@ -1,6 +1,6 @@
-﻿using ECommerce.Models;
+﻿using ECommerce.Models.Products;
 
-namespace ECommerce.Services.Interfaces
+namespace ECommerce.Interfaces
 {
     public interface IProductService
     {
@@ -8,6 +8,7 @@ namespace ECommerce.Services.Interfaces
         Product GetProductById(int id);
         void AddProduct(Product product);
         void RemoveProduct(int id);
+        //bool IsInStock(int productId);
         void UpdateProduct(Product product);
     }
 }

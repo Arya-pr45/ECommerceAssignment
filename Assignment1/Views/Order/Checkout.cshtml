@@ -1,0 +1,39 @@
+﻿@model ECommerce.Models.Address
+
+@{
+    ViewData["Title"] = "Enter Shipping Address";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Enter Your Shipping Address</h2>
+
+    <form asp-action="Create" asp-controller="Order" method="post" class="card p-4 shadow-sm rounded">
+
+        <div class="mb-3">
+            <label asp-for="Street" class="form-label fw-bold"></label>
+            <input asp-for="Street" class="form-control" />
+            <span asp-validation-for="Street" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="City" class="form-label fw-bold"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Zipcode" class="form-label fw-bold"></label>
+            <input asp-for="Zipcode" class="form-control" />
+            <span asp-validation-for="Zipcode" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Country" class="form-label fw-bold"></label>
+            <input asp-for="Country" class="form-control" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Submit Address</button>
+
+    </form>
+</div>

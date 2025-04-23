@@ -2,16 +2,18 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ECommerce.Models.Products;
 
-namespace ECommerce.Models
+namespace ECommerce.Models.Orders
 {
-    public class Item
+    public class OrderItem
     {
         [Key]
-        public int Id { get; set; }
+        public int OrderItemId { get; set; }
 
-        [Required]
+        public int OrderId { get; set; }
+        [ForeignKey("OrderId")]
+        public Order Order { get; set; }
+
         public int ProductId { get; set; }
-
         [ForeignKey("ProductId")]
         public Product Product { get; set; }
 
@@ -19,11 +21,6 @@ namespace ECommerce.Models
         public int Quantity { get; set; }
 
         [Required]
-        public decimal UnitPrice { get; set; }
-
-        [NotMapped]
-        public decimal SubTotal => Quantity * UnitPrice;
-
-        public int? CartId { get; set; }
+        public decimal Price { get; set; }
     }
 }

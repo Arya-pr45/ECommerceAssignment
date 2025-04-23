@@ -1,8 +1,8 @@
-﻿@model List<ECommerce.Models.CartItem>
+﻿@model ECommerce.Models.Carts.CartViewModel
 
 <h2>Your Cart</h2>
 
-@if (!Model.Any())
+@if (Model.cartList.Count() == 0)
 {
     <p>Your cart is empty.</p>
 }
@@ -19,15 +19,15 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.cartList)
             {
                 <tr>
-                    <td>@item.Product.Name</td>
-                    <td>₹@item.Product.Price</td>
+                    <td>@item.ProductName</td>
+                    <td>₹@item.Price</td>
                     <td>@item.Quantity</td>
-                    <td>₹@(item.Quantity * item.Product.Price)</td>
+                    <td>₹@(item.Quantity * item.Price)</td>
                     <td>
-                        <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-productId="@item.Product.ProductId" class="btn btn-danger">
+                        <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-productId="@item.ProductId" class="btn btn-danger">
                             Remove
                         </a>
                     </td>
@@ -36,9 +36,16 @@ else
             <tr>
                 <td colspan="3" class="text-end"><strong>Total Amount to be Paid:</strong></td>
                 <td colspan="2">
-                    <strong>₹@Model.Sum(item => item.Product.Price * item.Quantity)</strong>
+                    <strong>₹@Model.cartList.Sum(item => item.Price * item.Quantity)</strong>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <div class="text-end mt-3">
+
+        <a asp-controller="Order" asp-action="Checkout" class="btn btn-success btn-lg">
+            Buy Now
+        </a>
+    </div>
 }

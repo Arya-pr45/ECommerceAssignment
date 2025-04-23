@@ -4,38 +4,46 @@ using ECommerce.Models;
 using ECommerce.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace ECommerce.Controllers;
-
-public class HomeController : Controller
+namespace ECommerce.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public HomeController(ApplicationDbContext context)
+    public class HomeController : Controller
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    public IActionResult Index()
-    {
-        var products = _context.Products.ToList();
-        return View(products);
-    }
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard");
+            }
 
-    public async Task<IActionResult> Dashboard()
-    {
-        var products = await _context.Products.ToListAsync();
-        return View(products);
-    }
+            return View(); 
+        }
+        public async Task<IActionResult> Dashboard()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index");
+            }
 
+            var products = await _context.Products.ToListAsync();
+            return View(products);
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

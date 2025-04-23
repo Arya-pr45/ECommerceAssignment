@@ -1,23 +1,9 @@
-﻿@model List<ECommerce.Models.Product>
+﻿@using ECommerce.Models.Products
+@model List<Product>
 
 @{
 	ViewData["Title"] = "Welcome";
 }
-
-<div class="container">
-	<h1>List of Products Available</h1>
-	<div class="row">
-		@foreach (var item in Model)
-		{
-			<div class="col-sm-4">
-				<span style="display:block" class="h3 text-info">@item.Name</span>
-				<span style="display:block" class="h4 text-info"><b>@item.Price per item</b></span>
-				<a href="@Url.Action("AddToCart","Cart",new{@ProductId = item.ProductId})" class="btn btn-primary">Add to Cart</a>
-			</div>
-		}
-
-	</div>
-</div>
 
 <style>
 	body.dark-mode {
@@ -39,12 +25,6 @@
 
 <div class="container text-center mt-5">
 
-	<div class="text-end mb-3">
-		<button class="btn btn-sm btn-outline-dark" id="toggleDarkMode">
-			🌙 Toggle Dark Mode
-		</button>
-	</div>
-
 	<div class="card shadow p-4">
 		<h1 class="display-4 mb-4">Welcome to Our E-Commerce Portal</h1>
 		<p class="lead">Shop, manage orders, and experience seamless service powered by AI-enhanced backend.</p>
@@ -56,9 +36,3 @@
 	</div>
 </div>
 
-<script>
-	const toggleBtn = document.getElementById("toggleDarkMode");
-	toggleBtn.addEventListener("click", function () {
-		document.body.classList.toggle("dark-mode");
-	});
-</script>

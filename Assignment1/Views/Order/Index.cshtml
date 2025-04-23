@@ -1,0 +1,23 @@
+﻿@model ECommerce.Models.Orders.OrderViewModel;
+
+<h2>Your Orders</h2>
+
+@if (!Model.orderList.Any())
+{
+    <p>You haven't placed any orders yet.</p>
+}
+else
+{
+    foreach (var order in Model.orderList)
+    {
+        <div class="card mb-3 p-3 shadow-sm">
+            <h5>Order ID: @order.OrderId</h5>
+            <p>Order Date: @order.OrderDate.ToShortDateString()</p>
+            <p>Total Amount: ₹@order.TotalAmount</p>
+            <p>Name: ₹@order.Name</p>
+            <p>Price: ₹@order.Price</p>
+            <p>Quantity: ₹@order.Status</p>
+            <p>Status: ₹@order.TotalAmount</p>
+        </div>
+    }
+}
