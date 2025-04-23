@@ -22,7 +22,7 @@ namespace ECommerce.Controllers
 
             return View(products);
         }
-
+        [Authorize(Roles ="Admin")]
         public IActionResult Manage()
         {
             ProductManage productManage = new() { Action = 'A' };
@@ -50,7 +50,8 @@ namespace ECommerce.Controllers
                     Price = req.Price,
                     Category = req.Category,
                     Description = req.Description,
-                    Stock = req.Stock
+                    Stock = req.Stock,
+                    ImageUrl = req.ImageUrl
                 };
 
                 await _productRepository.AddAsync(newProduct);
@@ -65,6 +66,7 @@ namespace ECommerce.Controllers
                     existingProduct.Category = req.Category;
                     existingProduct.Description = req.Description;
                     existingProduct.Stock = req.Stock;
+                    existingProduct.ImageUrl = req.ImageUrl;
 
                     _productRepository.Update(existingProduct);
                 }
@@ -81,8 +83,6 @@ namespace ECommerce.Controllers
             await _productRepository.SaveAsync();
             return RedirectToAction("Index");
         }
-
-        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);

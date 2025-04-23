@@ -24,7 +24,7 @@ namespace ECommerce.Controllers
             _orderItemsRepo = orderItemsRepo;
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Index()
         {
             OrderViewModel orderViewModel = new OrderViewModel();
@@ -51,13 +51,13 @@ namespace ECommerce.Controllers
             return View(orderViewModel);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Customer")]
         public IActionResult Checkout()
         {
             return View();
         }
         [HttpPost]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Create(Address address)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -103,7 +103,7 @@ namespace ECommerce.Controllers
             }
             await _cartItemRepo.SaveAsync();
             TempData["success"] = "Order Created Successfully";
-            return RedirectToAction("Success");
+            return RedirectToAction("Index","Product");
         }
 
     }

@@ -16,7 +16,7 @@ namespace ECommerce.Models.Products
         string Category { get; set; }
         string Description { get; set; }
         int Stock { get; set; }
-        //string ImageUrl { get; set; }
+        string ImageUrl { get; set; }
 
         void DisplayProductInfo();
     }
@@ -29,7 +29,7 @@ namespace ECommerce.Models.Products
         public string Category { get; set; }
         public string Description { get; set; }
         public int Stock { get; set; }
-        //public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
 
         public void DisplayProductInfo()
         {

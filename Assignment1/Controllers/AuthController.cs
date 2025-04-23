@@ -5,6 +5,7 @@ using BCrypt.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using static ECommerce.Models.User;
 
 namespace ECommerce.Controllers
 {
@@ -23,7 +24,7 @@ namespace ECommerce.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(Login req)
+        public async Task<IActionResult> Login(Login req)
         {
             if (ModelState.IsValid)
             {
@@ -33,18 +34,25 @@ namespace ECommerce.Controllers
                 {
                     var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), 
-                new Claim(ClaimTypes.Name, user.UserName),                 
-                new Claim(ClaimTypes.Email, user.Email),                   
-                new Claim(ClaimTypes.Role, user.Role.ToString())           
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-                    return RedirectToAction("Index","Home");
+                    if (user.Role == UserRole.Admin)
+                    {
+                        return RedirectToAction("Index", "Product");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
@@ -53,6 +61,7 @@ namespace ECommerce.Controllers
             }
             return View();
         }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -63,6 +72,7 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.Role = UserRole.Customer;
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                 _context.Users.Add(user);
                 _context.SaveChanges();

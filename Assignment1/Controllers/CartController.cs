@@ -40,8 +40,6 @@ namespace ECommerce.Controllers
             cartViewModel.cartList = cartItemList;
             return View(cartViewModel);
         }
-
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> AddToCart(int productId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -72,8 +70,6 @@ namespace ECommerce.Controllers
             TempData["success"] = "Added to Cart Successfully";
             return RedirectToAction("Index");
         }
-
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -88,5 +84,45 @@ namespace ECommerce.Controllers
             TempData["success"] = "Removed From Cart";
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<IActionResult> IncreaseQuantity(int productId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cartItem = (await _cartItemRepo.FindAsync(c => c.ProductId == productId && c.UserId == userId)).FirstOrDefault();
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity++;
+                _cartItemRepo.Update(cartItem);
+                await _cartItemRepo.SaveAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DecreaseQuantity(int productId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cartItem = (await _cartItemRepo.FindAsync(c => c.ProductId == productId && c.UserId == userId)).FirstOrDefault();
+
+            if (cartItem != null)
+            {
+                if (cartItem.Quantity > 1)
+                {
+                    cartItem.Quantity--;
+                    _cartItemRepo.Update(cartItem);
+                }
+                else
+                {
+                    _cartItemRepo.Remove(cartItem);
+                }
+
+                await _cartItemRepo.SaveAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

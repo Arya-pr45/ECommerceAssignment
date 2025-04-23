@@ -2,6 +2,7 @@
 using System.Linq;
 using ECommerce.Interfaces;
 using ECommerce.Models.Products;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProductS.Services
 {
@@ -40,7 +41,13 @@ namespace ProductS.Services
                 existingProduct.Description = updatedProduct.Description;
                 existingProduct.Price = updatedProduct.Price;
                 existingProduct.Stock = updatedProduct.Stock;
+                existingProduct.ImageUrl = updatedProduct.ImageUrl;
             }
         }
+        //public bool IsInStock(int productId)
+        //{
+        //    var product = _context.Products.FirstOrDefault(p => p.Id == productId);
+        //    return product != null && product.Quantity > 0;
+        //}
     }
 }
