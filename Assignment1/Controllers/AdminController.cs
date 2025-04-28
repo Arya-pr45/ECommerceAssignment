@@ -1,69 +1,24 @@
-﻿//using ECommerce.Data;
-//using ECommerce.Models;
-//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using ECommerce.Repository;
+using ECommerce.Models.Orders;
 
-//namespace ECommerce.Controllers
-//{
-//    [Authorize(Roles = "Admin")]
-//    public class AdminController : Controller
-//    {
-//        private readonly ApplicationDbContext _context;
+namespace ECommerce.Controllers
+{
+    [Authorize(Roles = "Admin")]
+    public class AdminController : Controller
+    {
+        private readonly IRepository<Order> _orderRepo;
 
-//        public AdminController(ApplicationDbContext context)
-//        {
-//            _context = context;
-//        }
+        public AdminController(IRepository<Order> orderRepo)
+        {
+            _orderRepo = orderRepo;
+        }
 
-//        public IActionResult ProductList()
-//        {
-//            var products = _context.Products.ToList();
-//            return View(products);
-//        }
-
-//        [HttpPost]
-//        public IActionResult MarkOutOfStock(int id)
-//        {
-//            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-//            if (product == null)
-//                return NotFound();
-
-//            product.IsInStock = false;
-//            _context.SaveChanges();
-
-//            return RedirectToAction("ProductList");
-//        }
-
-//        [HttpPost]
-//        public IActionResult MarkInStock(int id)
-//        {
-//            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-//            if (product == null)
-//                return NotFound();
-
-//            product.IsInStock = true;
-//            _context.SaveChanges();
-
-//            return RedirectToAction("ProductList");
-//        }
-//        public IActionResult Dashboard()
-//        {
-//            var totalUsers = _context.Users.Count();
-//            var totalOrders = _context.Orders.Count();
-//            var totalProducts = _context.Products.Count();
-//            var outOfStockCount = _context.Products.Count(p => !p.IsInStock);
-
-//            var summary = new
-//            {
-//                Users = totalUsers,
-//                Orders = totalOrders,
-//                Products = totalProducts,
-//                OutOfStock = outOfStockCount
-//            };
-
-//            ViewBag.Summary = summary;
-
-//            return View();
-//        }
-//    }
-//}
+        public async Task<IActionResult> AllOrders()
+        {
+            var orders = await _orderRepo.GetAllAsync(includeProperties: "OrderItems,OrderItems.Product");
+            return View(orders);
+        }
+    }
+}

@@ -7,26 +7,36 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card shadow-lg border-0 rounded-4 p-3 bg-light">
 
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-gradient bg-primary text-white rounded-top-4 py-3 px-4">
                     <h2 class="mb-0">@Model.Name</h2>
                 </div>
 
-                <div class="card-body">
-                    <p class="fs-5"><strong>Price:</strong> ₹@Model.Price</p>
-                    <p class="fs-5"><strong>Category:</strong> @Model.Category</p>
-                    <p class="fs-5"><strong>Description:</strong></p>
-                    <p class="text-muted">@Model.Description</p>
+                <div class="card-body px-4 py-5">
+                    <div class="mb-4">
+                        <p class="fs-4"><strong>Price:</strong> ₹@Model.Price</p>
+                        <p class="fs-5"><strong>Category:</strong> @Model.Category</p>
+                    </div>
+                    <hr />
+                    <div>
+                        <p class="fs-5"><strong>Description:</strong></p>
+                        <p class="text-muted">@Model.Description</p>
+                    </div>
                 </div>
 
-                <div class="card-footer text-end">
-                    <a asp-action="Index" class="btn btn-outline-secondary me-2">← Back to Products</a>
-                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-ProductId="@Model.ProductId" class="btn btn-success">Add to Cart 🛒</a>
+                <div class="card-footer d-flex justify-content-between align-items-center bg-white border-top-0 px-4 py-3">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                        ← Back to Products
+                    </a>
+                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-ProductId="@Model.ProductId"
+                       class="btn btn-lg btn-success rounded-pill px-5 d-flex align-items-center gap-2">
+                        <i class="bi bi-cart-plus-fill fs-5"></i> Add to Cart
+                    </a>
                 </div>
+
             </div>
-
         </div>
     </div>
 </div>
@@ -37,8 +47,19 @@
     }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-success {
+        background: linear-gradient(45deg, #28a745, #218838);
+        border: none;
+        color: white;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+            color: white;
         }
 
     body.dark-mode .card {
