@@ -1,53 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ECommerce.Interfaces;
+﻿using ECommerce.Interfaces;
 using ECommerce.Models.Products;
+using ECommerce.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace ProductS.Services
+namespace ECommerce.Services
 {
-    public class ProductService : IProductService
+    public class ProductS : IProductService
     {
-        private readonly List<Product> _products = new();
+        private readonly ApplicationDbContext _context;
 
-        public IEnumerable<Product> GetAllProducts()
+        public ProductS(ApplicationDbContext context)
         {
-            return _products;
+            _context = context;
         }
 
-        public Product GetProductById(int id)
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return _products.FirstOrDefault(p => p.ProductId == id);
+            return await _context.Products.ToListAsync();
         }
 
-        public void AddProduct(Product product)
+        public async Task<Product?> GetProductByIdAsync(int id)
         {
-            _products.Add(product);
+            return await _context.Products.FindAsync(id);
         }
 
-        public void RemoveProduct(int id)
+        public async Task AddProductAsync(Product product)
         {
-            var product = GetProductById(id);
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateProductAsync(Product product)
+        {
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteProductAsync(int id)
+        {
+            var product = await GetProductByIdAsync(id);
             if (product != null)
-                _products.Remove(product);
-        }
-
-        public void UpdateProduct(Product updatedProduct)
-        {
-            var existingProduct = _products.FirstOrDefault(p => p.ProductId == updatedProduct.ProductId);
-            if (existingProduct != null)
             {
-                existingProduct.Name = updatedProduct.Name;
-                existingProduct.Description = updatedProduct.Description;
-                existingProduct.Price = updatedProduct.Price;
-                existingProduct.Stock = updatedProduct.Stock;
-                existingProduct.ImageUrl = updatedProduct.ImageUrl;
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
             }
         }
-        //public bool IsInStock(int productId)
-        //{
-        //    var product = _context.Products.FirstOrDefault(p => p.Id == productId);
-        //    return product != null && product.Quantity > 0;
-        //}
     }
 }
