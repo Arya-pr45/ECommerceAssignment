@@ -1,5 +1,4 @@
-﻿// Controllers/OrderController.cs
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using ECommerce.Interfaces;
 using ECommerce.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -36,16 +35,24 @@ namespace ECommerce.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var success = await _orderService.CreateOrderAsync(userId, address);
-
-            if (!success)
+            try
             {
-                ModelState.AddModelError("", "Cart is empty or order could not be created.");
+                var success = await _orderService.CreateOrderAsync(userId, address);
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", "Cart is empty or order could not be created.");
+                    return View("Checkout", address);
+                }
+
+                TempData["success"] = "Order Created Successfully";
+                return RedirectToAction("Index", "Product");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Order creation failed: {ex.Message}");
                 return View("Checkout", address);
             }
-
-            TempData["success"] = "Order Created Successfully";
-            return RedirectToAction("Index", "Product");
         }
     }
 }

@@ -14,6 +14,7 @@ builder.Services.AddScoped<IProductService, ProductS>();
 builder.Services.AddScoped<ICartService, CartS>();
 builder.Services.AddScoped<IOrderService,OrderS>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services
@@ -40,7 +41,6 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

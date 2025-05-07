@@ -1,0 +1,41 @@
+﻿@model List<ECommerce.Models.Address>
+
+<h2>My Addresses</h2>
+<a href="@Url.Action("Create")">Add New Address</a>
+<table>
+    <thead>
+        <tr>
+            <th>Street</th>
+            <th>City</th>
+            <th>Zipcode</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var address in Model)
+        {
+            <tr>
+                <td>@address.Street</td>
+                <td>@address.City</td>
+                <td>@address.State</td>
+                <td>@address.ZipCode</td>
+                <td>@address.Country</td>
+                <td>
+                    @if (!address.IsDefault)
+                    {
+                        <form asp-action="SetDefault" method="post">
+                            <input type="hidden" name="id" value="@address.Id" />
+                            <button type="submit">Set as Default</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span>Default</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -2,16 +2,14 @@
 using ECommerce.Models.Products;
 using ECommerce.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace ECommerce.Services
 {
-    public class ProductS : IProductService
+    public class ProductS : Repository<Product>, IProductService
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductS(ApplicationDbContext context)
-        {
+        public ProductS(ApplicationDbContext context) : base(context) { 
             _context = context;
         }
 
@@ -45,6 +43,18 @@ namespace ECommerce.Services
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Product>> FindByCategoryAsync(string category)
+        {
+            if (string.IsNullOrEmpty(category))
+                return Enumerable.Empty<Product>();
+
+            var filtered = await _context.Products
+                .Where(p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                .ToListAsync();
+
+            return filtered;
         }
     }
 }

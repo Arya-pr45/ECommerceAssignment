@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using ECommerce.Models.Products;
 
 namespace ECommerce.Repository
 {
@@ -14,5 +15,6 @@ namespace ECommerce.Repository
         void Remove(T entity);
 
         Task SaveAsync();
+        Task UpdateAsync(Product existingProduct);
     }
 }

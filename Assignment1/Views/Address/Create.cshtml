@@ -1,0 +1,25 @@
+﻿@model ECommerce.Models.Address
+
+<h2>Add Address</h2>
+
+<form asp-action="Create" method="post">
+    <label>Street</label>
+    <input asp-for="Street" />
+    <br />
+    <label>City</label>
+    <input asp-for="City" />
+    <br />
+    <label>State</label>
+    <input asp-for="State"/>
+    </br>
+    <label>Zipcode</label>
+    <input asp-for="ZipCode" />
+    <br />
+    <label>Country</label>
+    <input asp-for="Country" />
+    <br />
+    <label>Set as Default?</label>
+    <input asp-for="IsDefault" type="checkbox" />
+    <br />
+    <button type="submit">Save</button>
+</form>

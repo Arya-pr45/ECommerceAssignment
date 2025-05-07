@@ -1,4 +1,5 @@
-﻿using ECommerce.Repository;
+﻿using ECommerce.Models.Products;
+using ECommerce.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -61,5 +62,11 @@ namespace ECommerce.Data
         {
             await _context.SaveChangesAsync();
         }
+
+        public Task UpdateAsync(Product existingProduct)
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

@@ -20,9 +20,13 @@ namespace ECommerce.Models
         public string City { get; set; }
 
         [Required]
-        public string Zipcode { get; set; }
+        public string ZipCode { get; set; }
+        [Required]
+        public string State { get; set; }
 
         [Required]
         public string Country { get; set; }
+
+        public bool IsDefault { get; set; } = false;
     }
 }

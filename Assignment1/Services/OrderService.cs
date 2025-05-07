@@ -14,17 +14,20 @@ namespace ECommerce.Services
         private readonly IRepository<Product> _productRepo;
         private readonly IRepository<Order> _orderRepo;
         private readonly IRepository<OrderItem> _orderItemRepo;
+        private readonly IAddressService _addressService;
 
         public OrderS(
             IRepository<Cart> cartRepo,
             IRepository<Product> productRepo,
             IRepository<Order> orderRepo,
-            IRepository<OrderItem> orderItemRepo)
+            IRepository<OrderItem> orderItemRepo,
+            IAddressService addressService)
         {
             _cartRepo = cartRepo;
             _productRepo = productRepo;
             _orderRepo = orderRepo;
             _orderItemRepo = orderItemRepo;
+            _addressService = addressService;
         }
 
         public async Task<OrderViewModel> GetOrdersForUserAsync(string userId)
@@ -61,7 +64,6 @@ namespace ECommerce.Services
             var cartItems = await _cartRepo.FindAsync(c => c.UserId == userId);
             if (!cartItems.Any()) return false;
 
-            address.CustomerId = Convert.ToInt32(userId);
             decimal totalAmount = 0;
 
             foreach (var cartItem in cartItems)
@@ -80,7 +82,7 @@ namespace ECommerce.Services
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,
-                ShippingAddress = address,
+                ShippingAddress = address, 
                 TotalAmount = totalAmount,
                 OrderItems = cartItems.Select(ci => new OrderItem
                 {
@@ -110,6 +112,7 @@ namespace ECommerce.Services
 
             return true;
         }
+
 
     }
 }
